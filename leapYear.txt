@@ -1,0 +1,13 @@
+declare 
+  cur_year number(5);
+  is_leap VARCHAR2(32);
+  prefix_txt VARCHAR2(64):= 'Current year is ';
+begin
+  select extract(year from sysdate) into cur_year from dual;
+  if mod(cur_year,4) != 0 then
+    is_leap := 'common';
+  elsif mod(cur_year,4) = 0 then
+    is_leap := 'leap';
+    end if;
+    dbms_output.put_line(prefix_txt||cur_year||' and it''s a '||is_leap||' year');
+  end;

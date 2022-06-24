@@ -1,0 +1,31 @@
+--Пункт 1
+declare
+  mystr VARCHAR2(64) := 'Hello, World!';
+begin
+	dbms_output.put_line(mystr);
+end;
+
+
+--Пункт 2
+declare
+  mystr VARCHAR2(64);
+begin
+  mystr := 'Hello, World!';
+  dbms_output.put_line(mystr);
+end;
+
+
+--Пункт 3
+declare
+  mystr VARCHAR2(64);
+begin
+  select 'Hello, World!' into mystr from DUAL;
+  dbms_output.put_line(mystr);
+end;
+
+
+--Пункт 4
+With AVG_PRICE as
+  (select * from PIES
+  where PRICE > 70)
+select * from AVG_PRICE;

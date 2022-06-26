@@ -1,0 +1,9 @@
+--Пункт 1
+select PRODUCT_NAME, FILLING, PRICE,
+case
+  when PRICE <= 90 then 'Беру, цена всего то ' || PRICE || ' руб'
+  when PRICE > 90 then 'За ' || PRICE || ' рублей брать не буду, лучше приготовлю сам' 
+
+end as Моё_мнение
+from PIES_MCA
+Where PRODUCT_NAME = 'блин' and FILLING = 'малина';

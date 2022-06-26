@@ -13,7 +13,7 @@ Where PRODUCT_NAME = 'блин' and FILLING = 'малина';
 --Пункт 2
 select PRICE, FILLING,
 case
-  when PRODUCT_NAME = 'блин' then 'пирожок'
+  when PRODUCT_NAME = 'пирожок' then 'блин'
 end as PRODUCT_NAME
 from PIES_MCA
-Where PRODUCT_NAME = 'блин';
+Where PRODUCT_NAME = 'пирожок';

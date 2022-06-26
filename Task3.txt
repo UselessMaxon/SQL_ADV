@@ -17,3 +17,12 @@ case
 end as PRODUCT_NAME
 from PIES_MCA
 Where PRODUCT_NAME = 'пирожок';
+
+
+
+--Пункт 3
+update PIES_MCA
+set PRICE = PRICE * case 
+  when PRODUCT_NAME = 'пирожок' then 1.33
+  when PRODUCT_NAME = 'блин' then 0.67
+  end;

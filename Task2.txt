@@ -26,4 +26,20 @@ end;
 
 
 --Пункт 2
+declare 
+  avgPrice_pie number(8,2);
+  avgPrice_blin number(8,2);
 
+begin
+
+  Select AVG(PRICE) into avgPrice_pie from PIES
+    GROUP BY PRODUCT_NAME
+    Having PRODUCT_NAME = 'пирожок';
+    
+    Select AVG(PRICE) into avgPrice_blin from PIES
+    GROUP BY PRODUCT_NAME
+    Having PRODUCT_NAME = 'блин';
+    
+    DBMS_OUTPUT.PUT_line(avgPrice_pie|| ' пирожок +++ блин' ||avgPrice_blin);
+    
+    end;

@@ -48,9 +48,9 @@ begin
   elsif avgPrice_blin >= avgPrice_pie then
     DBMS_OUTPUT.PUT_line('блины стоят не меньше пирожков');
   elsif avgPrice_pie is null then 
-    DBMS_OUTPUT.PUT_line('цену пирожка не удалось опеределить');
+    DBMS_OUTPUT.PUT_line('цену пирожка не удалось определить');
   elsif avgPrice_blin is null then 
-    DBMS_OUTPUT.PUT_line('цену блина не удалось опеределить');
+    DBMS_OUTPUT.PUT_line('цену блина не удалось определить');
   end if;
       
 end;

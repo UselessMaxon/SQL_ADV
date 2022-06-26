@@ -1,0 +1,17 @@
+-- Пункт 1. Вывести 1,2 и 5 строки из PIES в порядке увеличения цены продукта
+with Row_MCA as
+  (
+  select PIES_MCA.*, row_number() over(order by PRICE asc) as RN
+  from PIES_MCA
+  )
+  
+  select * from Row_MCA
+  where RN in (1,2,5);
+  
+  
+--Пункт 2. Написать запрос, выводящий актуальную (с самым большим EFD) конфигурацию по каждому продукту из таблицы PRODUCT_CONF
+  select * from 
+  (
+  select PRODUCT_CONF.*, row_number() over(PARTITION BY product order by EFD desc) RN
+  from PRODUCT_CONF)
+  where RN = 1;

@@ -1,0 +1,75 @@
+--Пункт 1 Написать цикл, выводящий последовательно квадраты чисел от 1 до 12
+begin
+  for i in 1..12 loop
+    dbms_output.put_line (i * i);
+    end loop;
+end;
+
+
+--Пункт 2 Написать цикл, увеличивающий цену пирожков на 20% до тех пор, пока средняя цена пирожков не будет равна или превышать среднюю цену на блины.
+declare 
+  Avg_Price_Pie number(8,2);
+  Avg_Price_Blin number(8,2);
+begin 
+
+  select avg(PRICE) into Avg_Price_Blin from PIES_MCA
+    group by PRODUCT_NAME
+    having PRODUCT_NAME = 'блин';
+
+  select avg(PRICE) into Avg_Price_Pie from PIES_MCA
+    group by PRODUCT_NAME
+    having PRODUCT_NAME = 'пирожок';
+    
+  while Avg_Price_Pie < Avg_Price_Blin loop
+    update PIES_MCA
+    set PRICE = PRICE * 1.2
+      where PRODUCT_NAME = 'пирожок';
+    select avg(PRICE) into Avg_Price_Pie from PIES_MCA
+      group by PRODUCT_NAME
+      having PRODUCT_NAME = 'пирожок';
+      end loop;
+end;
+
+
+
+--Пункт 3 Дополнить цикл из задачи № 2 условием, по которому выполнение цикла прекратиться в случае, если максимальная цена на пирожок превысит максимальную цену на блин
+declare 
+  Avg_Price_Pie number(8,2);
+  Avg_Price_Blin number(8,2);
+  Max_Price_Pie number(8,2);
+  Max_Price_Blin number(8,2);
+
+begin 
+
+  select avg(PRICE) into Avg_Price_Blin from PIES_MCA
+    group by PRODUCT_NAME
+    having PRODUCT_NAME = 'блин';
+
+  select avg(PRICE) into Avg_Price_Pie from PIES_MCA
+    group by PRODUCT_NAME
+    having PRODUCT_NAME = 'пирожок';
+    
+  select max(Price) into Max_Price_Blin from PIES_MCA
+    where PRODUCT_NAME = 'блин';
+    
+    select max(Price) into Max_Price_Pie from PIES_MCA
+    where PRODUCT_NAME = 'пирожок';
+    
+  while Avg_Price_Pie < Avg_Price_Blin and Max_Price_Pie <= Max_Price_Blin loop
+    
+    update PIES_MCA
+    set PRICE = PRICE * 1.2
+      where PRODUCT_NAME = 'пирожок';
+    
+    select avg(PRICE) into Avg_Price_Pie from PIES_MCA
+      group by PRODUCT_NAME
+      having PRODUCT_NAME = 'пирожок';
+    
+    select max(Price) into Max_Price_Blin from PIES_MCA
+    where PRODUCT_NAME = 'блин';
+    
+    select max(Price) into Max_Price_Pie from PIES_MCA
+    where PRODUCT_NAME = 'пирожок';
+      
+      end loop;
+end;

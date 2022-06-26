@@ -1,0 +1,63 @@
+-- Пункт 1. Создать и вызвать функцию TheNumbers, производящую деление числа на 2
+create or replace function TheNumbers_MCA 
+  (mynum in number)
+return number
+is
+  res number(8,2);
+begin
+  res := mynum / 2;
+  return res;
+end;
+
+--Вызов
+--select TheNumbers_MCA (5631.45) from DUAL;
+
+
+
+-- Пункт 2. Создать произвольную таблицу и написать процедуру, удаляющую её
+begin 
+  DeleteTable_MCA ('DeleteMe_MCA');
+end;
+
+
+create Table DeleteMe_MCA (
+  ID number (4) Primary Key);
+  
+  select * from deleteme_MCA
+  
+create or replace procedure DeleteTable_MCA
+  (nameTable in varchar2)
+is
+  GoFunc varchar2(256) := 'drop table ' || case 
+    when 1=1 then  nameTable
+    end; 
+begin
+  EXECUTE IMMEDIATE GoFunc;
+end;
+
+
+--Пункт 3. Создать функцию, которая будет инвертировать введённый текст длинной до 128 символов.
+create or replace function Invert_MCA 
+  (text in varchar)
+return varchar
+is
+  Revers_text varchar2(128);
+begin 
+  select reverse(text) into Revers_text from DUAL;
+  return Revers_text;
+end;
+
+-- Вызов
+-- select Invert_MCA('aaasssssddffdgfghghhjhjjklll') as Reverse_Text  from DUAL
+
+
+
+
+  
+
+
+
+
+
+
+

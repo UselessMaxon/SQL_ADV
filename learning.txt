@@ -1,3 +1,5 @@
+ set serveroutput on;
+
 declare 
   cur_year number(5);
   is_leap VARCHAR2(32);
@@ -21,3 +23,228 @@ begin
 PRODUCT_NAME = 'блин' and FILLING = 'черника';
   DBMS_OUTPUT.PUT_line(var_str.PRODUCT_NAME|| ' ' || var_str.FILLING || ' ' || var_str.PRICE);
 end;
+
+
+With AVG_PRICE as
+  (select PRODUCT_NAME, AVG(PRICE) as APP from PIES
+  group by PRODUCT_NAME)
+
+
+select * from AVG_PRICE
+where APP > 150;
+
+
+
+
+with ABC as
+  (
+    select 'мама мыла раму' as str from DUAL
+  )
+
+Select substr(str,6,4), instr(str,'ы',1,1),
+length(str) from ABC;
+
+
+
+--------
+declare 
+  cur_year number(5);
+  is_leap VARCHAR2(32);
+  prefix_txt VARCHAR2(64):= 'Current year is ';
+begin
+  select extract(year from sysdate) into cur_year from dual;
+  is_leap := case
+          when mod (cur_year,4) != 0 then 'common'
+          when mod (cur_year,4) = 0 then 'leap'
+          end;
+  dbms_output.put_line(prefix_txt||cur_year||' and it''s a '||is_leap||' year');
+end;
+
+
+-------
+Select case
+    when 1=1 then 'Math is ok'
+    when 1!=1 then 'Math got broken'
+	else 'beeeeeeeeeeeeeee'
+ end as Math_CHECK
+From DUAL;
+
+------
+select PRODUCT_NAME, FILLING, PRICE,
+case 
+  when PRICE >= 100 then 'Дороговато: целых' || to_char(price) || ' руб'
+  when PRICE < 100 and FILLING in ('клубника', 'малина')
+      then 'Норм! Берём всего по ' || to_char(PRICE)
+  when PRICE < 100 and FILLING not in ('клубника', 'малина') then 'не люблю' ||FILLING
+  
+end
+from PIES 
+where MAKER_TYPE = 'бабушка';
+
+
+
+
+-----------CASE в сортировке
+select * from PIES
+order by
+case
+when PRICE < 200 then MAKER_ID end asc,
+case
+when PRICE > 200 then MAKER_ID end asc,
+case
+when PRICE = 200 then MAKER_ID end desc;
+
+
+
+----------------цикл FOR
+begin
+  for i in 1..10 loop
+  dbms_output.put_line (i);
+  end loop;
+end;
+
+
+----------------цикл FOR reverse
+begin
+  for i in reverse 1..10 loop
+  dbms_output.put_line (i);
+  end loop;
+end;
+
+
+-------------------цикл FOR с прерыванием
+begin 
+ for i in reverse 1..10 loop
+    dbms_output.put_line (i);
+    if i = 5 then 
+      dbms_output.put_line ('it''s 5! Breeeeeeak!');
+      exit;
+    end if;
+  end loop;
+end;
+
+
+-------------------цикл FOR для принта строчек
+begin 
+  for i in (select * from PIES_MCA) loop
+    dbms_output.put_line(i.PRODUCT_NAME || ' ' || i.FILLING);
+  end loop;
+end;
+
+
+
+------------------ цикл WHILE
+declare 
+  i number (10) := 1;
+begin 
+  while i <= 10 loop
+    dbms_output.put_line(i);
+    i := i+1;
+  end loop;
+end;
+
+
+
+------------------ цикл WHILE повышение зп
+declare 
+  cur_sal number;
+begin 
+  select avg(SALARY) into cur_sal from STAFF;
+while cur_sal < 150000 loop
+  update STAFF
+  set salary = salary * 1.2;
+  select avg(SALARY) into cur_sal from STAFF;
+  end loop;
+  commit;
+end;
+
+
+
+--------------- Hello world
+create or replace procedure HW_MCA
+is
+begin
+  dbms_output.put_line('Hello World');
+end;
+
+--вызов
+begin 
+  HW_MCA;
+end;
+
+
+------------------Хранимые процедуры
+create or replace procedure p_HowMushIsTheFish_MCA
+  (fish in varchar)
+is
+  f_price number(6,2);
+begin
+  select PRICE into f_price from FISH
+  Where FISH_TYPE = fish;
+
+  DBMS_OUTPUT.PUT_LINE(fish || ' стоит ' || f_price);
+end p_HowMushIsTheFish_MCA;
+
+--вызов
+begin 
+p_HowMushIsTheFish_MCA ('salmon');
+end;
+
+
+---------------------Функции
+create or replace function f_HowMushIsFish_MCA (fish in varchar)
+  return number
+is
+  f_price number;
+begin
+  select PRICE into f_price from FISH where FISH_TYPE = fish;
+  return f_price;
+end f_HowMushIsFish_MCA;
+
+--вызов
+select f_HowMushIsFish_MCA('whale') from DUAL
+
+
+
+---------Функция четгое не четное число
+create or replace function ISODD_MCA (mynum in number)
+return varchar2
+is
+  res varchar2(256);
+begin
+  res := case
+    when mod (mynum,2) = 0 then 'чётное'
+    when mod (mynum,2) = 1 then 'нечётное'
+    else 'всё пропало!'
+    end;
+  return res;
+end;
+
+--Вызов
+select ISODD_MCA(12) from DUAL
+
+
+---- ROW number Over 
+with Row_MCA as
+  (
+  select PIES_MCA.*, row_number() over(PARTITION BY PRODUCT_NAME order by PRICE desc) as RN
+  from PIES_MCA
+  )
+  
+  select * from Row_MCA
+  where RN <=3
+  
+  
+  ----ROW number Over 
+  select * from 
+  (
+  select PRODUCT_CONF.*, row_number() over(PARTITION BY product order by EFD desc) RN
+  from PRODUCT_CONF)
+  where RN = 1;
+  
+  
+----ROW number Over   
+select * from (
+  select DEALS.*, row_number() over(PARTITION BY product order by contract desc) RN
+  from Deals)
+  where RN = 1; 

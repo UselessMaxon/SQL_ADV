@@ -3,7 +3,17 @@ select PRODUCT_NAME, FILLING, PRICE,
 case
   when PRICE <= 90 then 'Беру, цена всего то ' || PRICE || ' руб'
   when PRICE > 90 then 'За ' || PRICE || ' рублей брать не буду, лучше приготовлю сам' 
-
+  when PRICE is null then 'Не вижу ценника'
 end as Моё_мнение
 from PIES_MCA
 Where PRODUCT_NAME = 'блин' and FILLING = 'малина';
+
+
+
+--Пункт 2
+select PRICE, FILLING,
+case
+  when PRODUCT_NAME = 'блин' then 'пирожок'
+end as PRODUCT_NAME
+from PIES_MCA
+Where PRODUCT_NAME = 'блин';

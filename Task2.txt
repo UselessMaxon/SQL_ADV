@@ -1,0 +1,29 @@
+--Пункт 1
+declare
+  min_gm number(5);
+  min_gf number(5);
+
+begin
+
+  select min(PRICE) as PRICE into min_gm from PIES 
+  where MAKER_TYPE = 'бабушка'
+  group by MAKER_TYPE;
+  
+  select min(PRICE) as PRICE into min_gf from PIES 
+  where MAKER_TYPE = 'дедушка'
+  group by MAKER_TYPE;
+  
+  If min_gm < min_gf then 
+    DBMS_OUTPUT.PUT_line('Самый дешёвый продукт делает: бабушка'); 
+  elsif min_gm > min_gf then 
+   DBMS_OUTPUT.PUT_line('Самый дешёвый продукт делает: дедушка');
+  elsif min_gm = min_gf then
+    DBMS_OUTPUT.PUT_line('Самые дешёвые продукты у бабушки и дедушки равны');  
+  end if;
+  
+end;
+
+
+
+--Пункт 2
+

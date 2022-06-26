@@ -29,6 +29,7 @@ end;
 declare 
   avgPrice_pie number(8,2);
   avgPrice_blin number(8,2);
+  avg_Delta number (8,2);
 
 begin
 
@@ -36,10 +37,20 @@ begin
     GROUP BY PRODUCT_NAME
     Having PRODUCT_NAME = 'пирожок';
     
-    Select AVG(PRICE) into avgPrice_blin from PIES
+  Select AVG(PRICE) into avgPrice_blin from PIES
     GROUP BY PRODUCT_NAME
     Having PRODUCT_NAME = 'блин';
+   
+  avg_Delta := ABS(avgPrice_blin - avgPrice_pie);
     
-    DBMS_OUTPUT.PUT_line(avgPrice_pie|| ' пирожок +++ блин' ||avgPrice_blin);
-    
-    end;
+  if avgPrice_blin < avgPrice_pie then
+    DBMS_OUTPUT.PUT_line('В среднем, блины дешевле пирожков на ' || avg_Delta || ' руб.');    
+  elsif avgPrice_blin >= avgPrice_pie then
+    DBMS_OUTPUT.PUT_line('блины стоят не меньше пирожков');
+  elsif avgPrice_pie is null then 
+    DBMS_OUTPUT.PUT_line('цену пирожка не удалось опеределить');
+  elsif avgPrice_blin is null then 
+    DBMS_OUTPUT.PUT_line('цену блина не удалось опеределить');
+  end if;
+      
+end;
